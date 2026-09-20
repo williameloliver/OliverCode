@@ -1,4 +1,4 @@
-# CodePad AI v0.1
+# CodePad AI v0.2
 
 Editor de código nativo y liviano para Android 4.2 (API 17) o superior.
 
@@ -9,8 +9,11 @@ Editor de código nativo y liviano para Android 4.2 (API 17) o superior.
 - Proyectos ZIP: extracción segura, árbol navegable y reexportación.
 - Pestañas bajo demanda para ahorrar RAM; mantener pulsada una pestaña para cerrarla.
 - Panel lateral plegable con explorador y símbolos del archivo.
-- Búsqueda, undo/redo, números de línea en la barra de estado y editor monoespaciado.
-- Preguntas de IA sobre una selección o el archivo completo mediante un backend configurable.
+- Números de línea visibles, desplazamiento táctil horizontal/vertical y zoom de texto con dos dedos.
+- Selector visual del sistema para abrir archivos y proyectos ZIP, sin escribir rutas manualmente.
+- Búsqueda, undo/redo y editor monoespaciado con resaltado de sintaxis.
+- Preguntas de IA sobre una selección o el archivo completo, con contraseña/token configurable.
+- TLS 1.2 activado para conectar Android 4.2 con backends HTTPS modernos como Render.
 
 ## Compilar automáticamente con GitHub Actions
 
@@ -19,7 +22,7 @@ Editor de código nativo y liviano para Android 4.2 (API 17) o superior.
 3. Abre **Actions → Compilar APK Android 4.2**.
 4. Descarga el artifact **CodePadAI-Android-4.2**.
 
-El workflow instala Java 17, Gradle 7.6 y Android SDK 33 automáticamente. No requiere `gradlew` ni configurar Codespaces.
+El workflow usa Java 17, Gradle 7.6 y el Android SDK incluido en GitHub Actions. No requiere `gradlew` ni configurar Codespaces.
 
 ## Compilar localmente
 
@@ -32,7 +35,7 @@ El APK generado queda en `app/build/outputs/apk/debug/app-debug.apk`.
 
 ## Contrato del backend IA
 
-La aplicación hace `POST` a la URL guardada en Ajustes con `Content-Type: application/json`:
+La aplicación hace `POST` a la URL guardada en Ajustes con `Content-Type: application/json`. También puede enviar la contraseña o token usando el encabezado configurado, por ejemplo `X-API-Key` o `Authorization`:
 
 ```json
 {
@@ -47,4 +50,4 @@ Reconoce una respuesta JSON con `answer`, `response` o `message`. La clave de Op
 
 ## Nota Android 4.2
 
-En Ajustes → Seguridad debe permitirse instalar APK de fuentes desconocidas. La ruta `/sdcard/` es editable al abrir y exportar. El proyecto usa APIs clásicas, sin AndroidX ni Compose.
+En Ajustes → Seguridad debe permitirse instalar APK de fuentes desconocidas. Para exportar un ZIP todavía se puede indicar una ruta de destino. El proyecto usa APIs clásicas, sin AndroidX ni Compose.

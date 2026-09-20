@@ -1,12 +1,13 @@
 package cl.will.codepadai;
 
-import java.io.*;import java.net.*;import org.json.*;
+import java.io.*;import java.net.*;import java.security.*;import javax.net.ssl.*;import org.json.*;
 final class AIClient {
  interface Callback { void done(String answer,Exception error); }
- static void ask(final String url,final String question,final String language,final String filename,final String code,final Callback cb){new Thread(new Runnable(){public void run(){try{
-  HttpURLConnection c=(HttpURLConnection)new URL(url).openConnection();c.setRequestMethod("POST");c.setConnectTimeout(15000);c.setReadTimeout(60000);c.setDoOutput(true);c.setRequestProperty("Content-Type","application/json; charset=UTF-8");
+ static void ask(final String url,final String header,final String secret,final String question,final String language,final String filename,final String code,final Callback cb){new Thread(new Runnable(){public void run(){try{
+  HttpURLConnection c=(HttpURLConnection)new URL(url).openConnection();if(c instanceof HttpsURLConnection&&android.os.Build.VERSION.SDK_INT<21)((HttpsURLConnection)c).setSSLSocketFactory(tls12());c.setRequestMethod("POST");c.setConnectTimeout(20000);c.setReadTimeout(90000);c.setDoOutput(true);c.setRequestProperty("Content-Type","application/json; charset=UTF-8");if(header!=null&&header.trim().length()>0&&secret!=null&&secret.length()>0)c.setRequestProperty(header.trim(),secret);
   JSONObject body=new JSONObject();body.put("question",question);body.put("language",language);body.put("filename",filename);body.put("code",code);
   OutputStream o=c.getOutputStream();o.write(body.toString().getBytes("UTF-8"));o.close();InputStream in=c.getResponseCode()<400?c.getInputStream():c.getErrorStream();BufferedReader r=new BufferedReader(new InputStreamReader(in,"UTF-8"));StringBuilder b=new StringBuilder();String line;while((line=r.readLine())!=null)b.append(line);r.close();
   JSONObject j=new JSONObject(b.toString());String a=j.optString("answer",j.optString("response",j.optString("message",b.toString())));cb.done(a,null);
  }catch(Exception e){cb.done(null,e);}}}).start(); }
+ private static SSLSocketFactory tls12() throws Exception {final SSLContext context=SSLContext.getInstance("TLSv1.2");context.init(null,null,null);final SSLSocketFactory base=context.getSocketFactory();return new SSLSocketFactory(){private Socket enable(Socket s){if(s instanceof SSLSocket)((SSLSocket)s).setEnabledProtocols(new String[]{"TLSv1.2"});return s;}public String[] getDefaultCipherSuites(){return base.getDefaultCipherSuites();}public String[] getSupportedCipherSuites(){return base.getSupportedCipherSuites();}public Socket createSocket(Socket s,String h,int p,boolean a)throws IOException{return enable(base.createSocket(s,h,p,a));}public Socket createSocket(String h,int p)throws IOException{return enable(base.createSocket(h,p));}public Socket createSocket(String h,int p,InetAddress l,int lp)throws IOException{return enable(base.createSocket(h,p,l,lp));}public Socket createSocket(InetAddress h,int p)throws IOException{return enable(base.createSocket(h,p));}public Socket createSocket(InetAddress h,int p,InetAddress l,int lp)throws IOException{return enable(base.createSocket(h,p,l,lp));}};}
 }
