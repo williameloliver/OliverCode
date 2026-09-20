@@ -1,53 +1,44 @@
-# CodePad AI v0.2
+# OliverCode Beta 0.3
 
-Editor de código nativo y liviano para Android 4.2 (API 17) o superior.
+Editor de código liviano, táctil y asistido por IA para Android 4.2 (API 17) o superior.
 
-## Funciones
+## Funciones principales
 
-- Abre, crea, edita y guarda archivos de texto/código en cualquier extensión.
-- Resaltado extensible para Java, Python, C/C++, JavaScript, JSON, XML/HTML y otros.
-- Proyectos ZIP: extracción segura, árbol navegable y reexportación.
-- Pestañas bajo demanda para ahorrar RAM; mantener pulsada una pestaña para cerrarla.
-- Panel lateral plegable con explorador y símbolos del archivo.
-- Números de línea visibles, desplazamiento táctil horizontal/vertical y zoom de texto con dos dedos.
-- Selector visual del sistema para abrir archivos y proyectos ZIP, sin escribir rutas manualmente.
-- Búsqueda, undo/redo y editor monoespaciado con resaltado de sintaxis.
-- Preguntas de IA sobre una selección o el archivo completo, con contraseña/token configurable.
-- TLS 1.2 activado para conectar Android 4.2 con backends HTTPS modernos como Render.
+- Abre, crea, edita y guarda archivos de texto o código.
+- Importa proyectos ZIP mediante el navegador de archivos de Android.
+- Árbol de proyecto, pestañas, búsqueda, símbolos, deshacer/rehacer y exportación ZIP.
+- Números de línea lógicos y ajuste de línea desactivado por defecto.
+- Zoom con dos dedos y desplazamiento táctil horizontal/vertical.
+- Barra flotante y movible con símbolos frecuentes de programación.
+- Mantener pulsado un archivo o carpeta permite eliminarlo con confirmación.
+- Mini chat de IA inferior: permite consultar sin dejar de ver el código.
+- Al importar un ZIP, busca `README.md`, `README.txt` o `README` y lo usa como contexto del proyecto.
+- Conscrypt ofrece HTTPS moderno en Android 4.2, usando la misma solución probada en RetroAI.
 
-## Compilar automáticamente con GitHub Actions
+## Configurar Render y OpenRouter
 
-1. Descomprime el ZIP directamente en la raíz de un repositorio.
-2. Sube los archivos a GitHub.
-3. Abre **Actions → Compilar APK Android 4.2**.
-4. Descarga el artifact **CodePadAI-Android-4.2**.
+La carpeta `backend/` contiene el servidor y `render.yaml` permite desplegarlo en Render.
 
-El workflow usa Java 17, Gradle 7.6 y el Android SDK incluido en GitHub Actions. No requiere `gradlew` ni configurar Codespaces.
+Variables privadas requeridas en Render:
 
-## Compilar localmente
+- `OPENROUTER_API_KEY`: clave privada de OpenRouter; nunca va dentro del APK.
+- `APP_SHARED_KEY`: contraseña compartida entre OliverCode y Render.
+- `OPENROUTER_MODEL`: opcional; por defecto `openrouter/free`.
 
-1. Abrir esta carpeta en Android Studio.
-2. Usar JDK 11 o 17 y dejar que Gradle descargue Android Gradle Plugin 7.4.2.
-3. Instalar Android SDK 33 si se solicita.
-4. Ejecutar `assembleDebug` o pulsar **Build APK**.
+En **OliverCode → Ajustes de IA** escribe:
 
-El APK generado queda en `app/build/outputs/apk/debug/app-debug.apk`.
+1. URL base de Render, por ejemplo `https://mi-app.onrender.com`.
+2. Encabezado: `X-RetroAI-Key`, `X-OliverCode-Key` o `X-API-Key`.
+3. La misma contraseña configurada como `APP_SHARED_KEY`.
+4. El modelo de OpenRouter.
 
-## Contrato del backend IA
+El backend acepta los tres nombres de encabezado para mantener compatibilidad con RetroAI.
 
-La aplicación hace `POST` a la URL guardada en Ajustes con `Content-Type: application/json`. También puede enviar la contraseña o token usando el encabezado configurado, por ejemplo `X-API-Key` o `Authorization`:
+## Compilar con GitHub Actions
 
-```json
-{
-  "question": "Explícame este método",
-  "language": "java",
-  "filename": "MainActivity.java",
-  "code": "..."
-}
-```
+1. Descomprime este ZIP en la raíz del repositorio.
+2. Ejecuta `git add .`, `git commit` y `git push`.
+3. Abre **Actions → Compilar OliverCode Beta**.
+4. Descarga el artifact `OliverCode-Beta-Android-4.2`.
 
-Reconoce una respuesta JSON con `answer`, `response` o `message`. La clave de OpenRouter permanece en Render.
-
-## Nota Android 4.2
-
-En Ajustes → Seguridad debe permitirse instalar APK de fuentes desconocidas. Para exportar un ZIP todavía se puede indicar una ruta de destino. El proyecto usa APIs clásicas, sin AndroidX ni Compose.
+El proyecto usa `minSdk 17`, Java 17 para la compilación, Gradle 7.6 y Android SDK 33.

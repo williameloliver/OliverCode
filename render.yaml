@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: olivercode-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: APP_SHARED_KEY
+        sync: false
+      - key: OPENROUTER_MODEL
+        value: openrouter/free

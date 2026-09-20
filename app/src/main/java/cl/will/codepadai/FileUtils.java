@@ -28,4 +28,9 @@ final class FileUtils {
         File[] kids=f.listFiles(); if(f.isDirectory()){ if(kids!=null)for(File k:kids)add(root,k,out); return; }
         String name=root.toURI().relativize(f.toURI()).getPath(); out.putNextEntry(new ZipEntry(name)); FileInputStream in=new FileInputStream(f); byte[] b=new byte[8192]; int n; while((n=in.read(b))>0)out.write(b,0,n);in.close();out.closeEntry();
     }
+    static boolean deleteRecursive(File f){
+        if(f==null||!f.exists())return true;
+        if(f.isDirectory()){File[] kids=f.listFiles();if(kids!=null)for(File k:kids)if(!deleteRecursive(k))return false;}
+        return f.delete();
+    }
 }
