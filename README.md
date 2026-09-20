@@ -1,4 +1,4 @@
-# OliverCode Beta 0.3
+# OliverCode Beta 0.3.1
 
 Editor de código liviano, táctil y asistido por IA para Android 4.2 (API 17) o superior.
 
