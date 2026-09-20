@@ -32,7 +32,7 @@ app.post("/chat", auth, async (req, res) => {
     const payload = {
       model: req.body.model || process.env.OPENROUTER_MODEL || "openrouter/free",
       messages,
-      max_tokens: Math.max(128, Math.min(Number(req.body.max_tokens || 1200), 4096)),
+      max_tokens: Math.max(128, Math.min(Number(req.body.max_tokens || 450), 4096)),
       temperature: 0.35,
       stream: false
     };
