@@ -1,4 +1,4 @@
-name: Compilar OliverCode Beta
+name: Compilar OliverCode Lite Beta
 
 on:
   workflow_dispatch:
@@ -33,6 +33,6 @@ jobs:
       - name: Subir APK
         uses: actions/upload-artifact@v4
         with:
-          name: OliverCode-Beta-Android-4.2
+          name: OliverCode-Lite-Beta-v0.4.0-Android-4.2
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
